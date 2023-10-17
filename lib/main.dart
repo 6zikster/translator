@@ -5,6 +5,7 @@ import 'package:translator/widgets/home/home.dart';
 import 'package:translator/widgets/saved/saved.dart';
 import 'package:translator/widgets/settings/settings.dart';
 import 'var.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme:

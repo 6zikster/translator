@@ -15,13 +15,13 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   String translation = "";
   final translationController = TextEditingController();
   int selectedOption = 1;
-  List<String> languages = ["🇺🇸Eng", "🇷🇺Rus", "🇪🇸Spa", "🇫🇷Fr"];
-  String languageSource = "";
-  String languageDestanation = "";
-  TextEditingController controllerTranslatedField = TextEditingController();
+  IconData? bookmarkBtnIcon = Icons.bookmark;
+
   _TextFieldsWidgetState() {
-    languageSource = languages[0];
-    languageDestanation = languages[1];
+    if (controllerTranslatedField.text != "") {
+      translation = translate(controllerTranslatedField.text);
+    }
+    isBookmarked();
   }
 
   String translate(String textToTranslate) {
@@ -82,6 +82,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                               translation =
                                   translate(controllerTranslatedField.text);
                             });
+                            isBookmarked();
                           },
                           icon: Icon(
                             Icons.switch_left,
@@ -126,6 +127,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                   onChanged: (value) {
                     setState(() {
                       translation = translate(value);
+
+                      isBookmarked();
                     });
                   },
                 ),
@@ -146,29 +149,44 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  //Icon Bookmark
                   Container(
                     child: ClipOval(
                       child: Material(
                         color: Colors.transparent,
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          onPressed: () => {},
-                          icon: Icon(
-                            Icons.bookmark_add_outlined,
-                            size: heightPerCentage(context, 0.035),
-                          ),
+                          onPressed: () {
+                            if (controllerTranslatedField.text != "") {
+                              setState(() {
+                                bookmarkBtnIcon = Icons.bookmark;
+                              });
+
+                              Bookmarks temp = Bookmarks();
+                              temp.strSource = controllerTranslatedField.text;
+                              temp.strDestanation = translation;
+                              temp.FlagSource = languageSource;
+                              temp.FlagDestanation = languageDestanation;
+                              bookmarkedWords.insert(0, temp);
+                            }
+                          },
+                          icon: Icon(bookmarkBtnIcon,
+                              size: heightPerCentage(context, 0.035)),
                           color: Colors.blue,
                         ),
                       ),
                     ),
                   ),
+                  //Icon Paste
                   Container(
                     child: ClipOval(
                       child: Material(
                         color: Colors.transparent,
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          onPressed: () => {_getClipboardText()},
+                          onPressed: () {
+                            _getClipboardText();
+                          },
                           icon: Icon(
                             Icons.paste_outlined,
                             size: heightPerCentage(context, 0.035),
@@ -336,6 +354,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
           controllerTranslatedField.text = translation;
           translation = translate(controllerTranslatedField.text);
         }
+        isBookmarked();
       });
     });
   }
@@ -442,8 +461,28 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
           controllerTranslatedField.text = translation;
           translation = translate(controllerTranslatedField.text);
         }
+
+        isBookmarked();
       });
     });
+  }
+
+  //sets bookmark icon. being called after text changed
+  void isBookmarked() {
+    bool flagBookmarkBtnIcon = false;
+    for (int i = 0; i < bookmarkedWords.length; i++) {
+      if (bookmarkedWords[i].strSource == controllerTranslatedField.text &&
+          bookmarkedWords[i].FlagSource == languageSource &&
+          bookmarkedWords[i].FlagDestanation == languageDestanation) {
+        flagBookmarkBtnIcon = true;
+        break;
+      }
+    }
+    if (flagBookmarkBtnIcon) {
+      bookmarkBtnIcon = Icons.bookmark;
+    } else {
+      bookmarkBtnIcon = Icons.bookmark_add_outlined;
+    }
   }
 
   void _getClipboardText() async {
@@ -453,5 +492,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     setState(() {
       translation = translate(controllerTranslatedField.text);
     });
+    print("bookmark: " + controllerTranslatedField.text);
+    isBookmarked();
   }
 }
