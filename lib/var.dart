@@ -10,14 +10,7 @@ double heightPerCentage(BuildContext context, double percentage) {
       percentage; // set width to percentage% of the screen width
 }
 
-class Bookmarks {
-  String strSource = "";
-  String strDestanation = "";
-  String FlagSource = "";
-  String FlagDestanation = "";
-}
-
-List<Bookmarks> bookmarkedWords = [];
+List<Map<String, dynamic>> bookmarkedWords = [];
 final GlobalKey<AnimatedListState> keyToWords = GlobalKey();
 
 List<String> languages = ["🇺🇸Eng", "🇷🇺Rus", "🇪🇸Spa", "🇫🇷Fr"];

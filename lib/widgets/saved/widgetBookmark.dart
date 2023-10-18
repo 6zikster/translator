@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:translator/var.dart';
+import 'package:translator/db/db.dart';
 
 class WidgetBookmark extends StatefulWidget {
   WidgetBookmark({Key? key, required this.index}) : super(key: key);
@@ -13,7 +13,7 @@ class WidgetBookmark extends StatefulWidget {
 class _WidgetBookmarkState extends State<WidgetBookmark> {
   int index = -1;
   _WidgetBookmarkState(int i) {
-    this.index = i;
+    index = i;
   }
 
   @override
@@ -22,28 +22,31 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Card(
-            margin: EdgeInsets.all(10),
-            color: Color.fromARGB(255, 41, 41, 41),
+            margin: const EdgeInsets.only(top: 10, left: 20),
+            color: const Color.fromARGB(255, 41, 41, 41),
+            // ignore: sized_box_for_whitespace
             child: Container(
               width: widthPerCentage(context, 0.8),
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                    margin: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 5, right: 10),
+                          margin: const EdgeInsets.only(left: 5, right: 10),
                           child: Text(
-                            bookmarkedWords[index].FlagSource.substring(0, 4),
-                            style: TextStyle(fontSize: 24),
+                            bookmarkedWords[index]['flagSource']
+                                .substring(0, 4),
+                            style: const TextStyle(fontSize: 24),
                           ),
                         ),
                         Flexible(
                           child: Text(
-                            bookmarkedWords[index].strSource,
-                            style: TextStyle(color: Colors.white, fontSize: 24),
+                            bookmarkedWords[index]['strSource'],
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 24),
                           ),
                         )
                       ],
@@ -56,23 +59,23 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                     color: Colors.blueAccent,
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                    margin: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 5, right: 10),
+                          margin: const EdgeInsets.only(left: 5, right: 10),
                           child: Text(
-                            bookmarkedWords[index]
-                                .FlagDestanation
+                            bookmarkedWords[index]['flagDestanation']
                                 .substring(0, 4),
-                            style: TextStyle(fontSize: 24),
+                            style: const TextStyle(fontSize: 24),
                           ),
                         ),
                         Flexible(
                           child: Text(
-                            bookmarkedWords[index].strDestanation,
-                            style: TextStyle(color: Colors.white, fontSize: 24),
+                            bookmarkedWords[index]['strDestanation'],
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 24),
                           ),
                         )
                       ],
@@ -81,53 +84,60 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                 ],
               ),
             )),
-        InkWell(
-          child: Icon(Icons.delete_outline,
-              size: widthPerCentage(context, 0.078), color: Colors.redAccent),
-          onTap: () {
-            _removeItem(index);
-          },
-        ),
+        Container(
+          margin: const EdgeInsets.only(right: 20),
+          child: InkWell(
+            child: Icon(Icons.delete_outline,
+                size: widthPerCentage(context, 0.078), color: Colors.redAccent),
+            onTap: () {
+              _deleteItem(bookmarkedWords[index]['id'], index);
+            },
+          ),
+        )
       ],
     );
   }
 
-  void _removeItem(int index) {
-    String strSource = bookmarkedWords[index].strSource;
-    String strDestanation = bookmarkedWords[index].strDestanation;
-    String FlagSource = bookmarkedWords[index].FlagSource;
-    String FlagDestanation = bookmarkedWords[index].FlagDestanation;
+  Future<void> _deleteItem(int id, int index) async {
+    String strSource = bookmarkedWords[index]['strSource'];
+    String strDestanation = bookmarkedWords[index]['strDestanation'];
+    String flagSource = bookmarkedWords[index]['flagSource'];
+    String flagDestanation = bookmarkedWords[index]['flagDestanation'];
 
-    bookmarkedWords.removeAt(index);
+    await SQLHelper.deleteItem(id);
+    _refreshJournals();
+
     keyToWords.currentState!.removeItem(
       index,
       (_, animation) {
         return SizeTransition(
           sizeFactor: animation,
           child: Card(
-              margin: EdgeInsets.all(10),
+              margin: const EdgeInsets.only(top: 10, left: 20),
               color: const Color.fromARGB(255, 129, 38, 32),
+              // ignore: sized_box_for_whitespace
               child: Container(
                 width: widthPerCentage(context, 0.8),
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                      margin:
+                          const EdgeInsets.only(left: 20, top: 5, bottom: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(left: 5, right: 10),
+                            margin: const EdgeInsets.only(left: 5, right: 10),
                             child: Text(
-                              FlagSource.substring(0, 4),
-                              style: TextStyle(fontSize: 24),
+                              flagSource.substring(0, 4),
+                              style: const TextStyle(fontSize: 24),
                             ),
                           ),
                           Flexible(
                             child: Text(
                               strSource,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 24),
                             ),
                           )
                         ],
@@ -140,22 +150,23 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                       color: Colors.blueAccent,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                      margin:
+                          const EdgeInsets.only(left: 20, top: 5, bottom: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(left: 5, right: 10),
+                            margin: const EdgeInsets.only(left: 5, right: 10),
                             child: Text(
-                              FlagDestanation.substring(0, 4),
-                              style: TextStyle(fontSize: 24),
+                              flagDestanation.substring(0, 4),
+                              style: const TextStyle(fontSize: 24),
                             ),
                           ),
                           Flexible(
                             child: Text(
                               strDestanation,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 24),
                             ),
                           )
                         ],
@@ -166,7 +177,14 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
               )),
         );
       },
-      duration: Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 400),
     );
+  }
+
+  void _refreshJournals() async {
+    final data = await SQLHelper.getItems();
+    setState(() {
+      bookmarkedWords = data;
+    });
   }
 }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:translator/var.dart';
+import 'package:translator/db/db.dart';
 
 class TextFieldsWidget extends StatefulWidget {
   const TextFieldsWidget({Key? key}) : super(key: key);
@@ -47,6 +48,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
       child: Column(
         children: [
           //language pick
+
+          // ignore: sized_box_for_whitespace
           Container(
               width: widthPerCentage(context, 1),
               height: heightPerCentage(context, 0.07),
@@ -67,6 +70,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                           chooseSourceLanguage();
                         }),
                   ),
+                  // ignore: avoid_unnecessary_containers
                   Container(
                     child: ClipOval(
                       child: Material(
@@ -150,6 +154,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   //Icon Bookmark
+                  // ignore: avoid_unnecessary_containers
                   Container(
                     child: ClipOval(
                       child: Material(
@@ -157,17 +162,18 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            if (controllerTranslatedField.text != "") {
+                            if (controllerTranslatedField.text != "" &&
+                                bookmarkBtnIcon != Icons.bookmark) {
                               setState(() {
                                 bookmarkBtnIcon = Icons.bookmark;
                               });
 
-                              Bookmarks temp = Bookmarks();
-                              temp.strSource = controllerTranslatedField.text;
-                              temp.strDestanation = translation;
-                              temp.FlagSource = languageSource;
-                              temp.FlagDestanation = languageDestanation;
-                              bookmarkedWords.insert(0, temp);
+                              //add item
+                              _addItem(
+                                  controllerTranslatedField.text,
+                                  translation,
+                                  languageSource,
+                                  languageDestanation);
                             }
                           },
                           icon: Icon(bookmarkBtnIcon,
@@ -178,6 +184,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     ),
                   ),
                   //Icon Paste
+                  // ignore: avoid_unnecessary_containers
                   Container(
                     child: ClipOval(
                       child: Material(
@@ -212,6 +219,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   }
 
   Widget rowDivider() {
+    // ignore: sized_box_for_whitespace
     return Container(
       height: heightPerCentage(context, 0.005),
       child: Divider(
@@ -270,6 +278,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
               ),
               backgroundColor: Color.fromARGB(255, 48, 46, 49),
               shadowColor: Colors.transparent,
+              // ignore: avoid_unnecessary_containers
               content: Container(
                   child: SingleChildScrollView(
                 child: Column(
@@ -378,6 +387,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
               ),
               backgroundColor: Color.fromARGB(255, 48, 46, 49),
               shadowColor: Colors.transparent,
+              // ignore: sized_box_for_whitespace
               content: Container(
                   height: heightPerCentage(context, 0.28),
                   child: Column(
@@ -470,10 +480,18 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   //sets bookmark icon. being called after text changed
   void isBookmarked() {
     bool flagBookmarkBtnIcon = false;
+
+    String strSrc = "";
+    String flgSrc = "";
+    String flgDst = "";
     for (int i = 0; i < bookmarkedWords.length; i++) {
-      if (bookmarkedWords[i].strSource == controllerTranslatedField.text &&
-          bookmarkedWords[i].FlagSource == languageSource &&
-          bookmarkedWords[i].FlagDestanation == languageDestanation) {
+      strSrc = bookmarkedWords[i]['strSource'];
+      flgSrc = bookmarkedWords[i]['flagSource'];
+      flgDst = bookmarkedWords[i]['flagDestanation'];
+
+      if (strSrc == controllerTranslatedField.text &&
+          flgSrc == languageSource &&
+          flgDst == languageDestanation) {
         flagBookmarkBtnIcon = true;
         break;
       }
@@ -492,7 +510,13 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     setState(() {
       translation = translate(controllerTranslatedField.text);
     });
-    print("bookmark: " + controllerTranslatedField.text);
     isBookmarked();
+  }
+
+  Future<void> _addItem(
+      String src, String dst, String flagSrc, String flagDst) async {
+    await SQLHelper.createItem(src, dst, flagSrc, flagDst);
+    final data = await SQLHelper.getItems();
+    bookmarkedWords = data;
   }
 }
