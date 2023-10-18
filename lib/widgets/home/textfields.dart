@@ -18,11 +18,22 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   int selectedOption = 1;
   IconData? bookmarkBtnIcon = Icons.bookmark;
 
+  bool isLoading = true;
+
   _TextFieldsWidgetState() {
+    _initLanguages();
     if (controllerTranslatedField.text != "") {
       translation = translate(controllerTranslatedField.text);
     }
     isBookmarked();
+  }
+
+  void _initLanguages() async {
+    await initLanguageSource();
+    await initLanguageDestanation();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   String translate(String textToTranslate) {
@@ -39,176 +50,183 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widthPerCentage(context, 0.9),
-      height: heightPerCentage(context, 0.48),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Color.fromARGB(255, 41, 41, 41)),
-      child: Column(
-        children: [
-          //language pick
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Container(
+            width: widthPerCentage(context, 0.9),
+            height: heightPerCentage(context, 0.48),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Color.fromARGB(255, 41, 41, 41)),
+            child: Column(
+              children: [
+                //language pick
 
-          // ignore: sized_box_for_whitespace
-          Container(
-              width: widthPerCentage(context, 1),
-              height: heightPerCentage(context, 0.07),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 10.0),
-                    width: widthPerCentage(context, 0.3),
-                    child: TextButton(
-                        child: Text(
-                          languageSource,
-                          style: TextStyle(fontSize: 25),
+                // ignore: sized_box_for_whitespace
+                Container(
+                    width: widthPerCentage(context, 1),
+                    height: heightPerCentage(context, 0.07),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 10.0),
+                          width: widthPerCentage(context, 0.3),
+                          child: TextButton(
+                              child: Text(
+                                languageSource,
+                                style: TextStyle(fontSize: 25),
+                              ),
+                              onPressed: () {
+                                //Choose source language
+                                chooseSourceLanguage();
+                              }),
                         ),
-                        onPressed: () {
-                          //Choose source language
-                          chooseSourceLanguage();
-                        }),
-                  ),
-                  // ignore: avoid_unnecessary_containers
-                  Container(
-                    child: ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            setState(() {
-                              String temp = languageDestanation;
-                              languageDestanation = languageSource;
-                              languageSource = temp;
-                              controllerTranslatedField.text = translation;
-                              translation =
-                                  translate(controllerTranslatedField.text);
-                            });
+                        // ignore: avoid_unnecessary_containers
+                        Container(
+                          child: ClipOval(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  setState(() {
+                                    String temp = languageDestanation;
+                                    languageDestanation = languageSource;
+                                    languageSource = temp;
+                                    controllerTranslatedField.text =
+                                        translation;
+                                    translation = translate(
+                                        controllerTranslatedField.text);
+                                    setLanguageSource(languageSource);
+                                    setLanguageDestanation(languageDestanation);
+                                  });
+                                  isBookmarked();
+                                },
+                                icon: Icon(
+                                  Icons.switch_left,
+                                  size: heightPerCentage(context, 0.03),
+                                ),
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: widthPerCentage(context, 0.3),
+                          margin: EdgeInsets.only(right: 10.0),
+                          child: TextButton(
+                            child: Text(
+                              languageDestanation,
+                              style: TextStyle(fontSize: 25),
+                            ),
+                            onPressed: () => {chooseDestanationLanguage()},
+                          ),
+                        ),
+                      ],
+                    )),
+                rowDivider(),
+                //Enter text
+                Container(
+                    margin: EdgeInsets.only(
+                      left: 15,
+                    ),
+                    width: widthPerCentage(context, 1),
+                    height: heightPerCentage(context, 0.16),
+                    child: SingleChildScrollView(
+                      child: TextField(
+                        controller: controllerTranslatedField,
+                        decoration: InputDecoration(
+                          hintText: 'Enter text...',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+                        ),
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                        maxLines: null,
+                        onChanged: (value) {
+                          setState(() {
+                            translation = translate(value);
+
                             isBookmarked();
-                          },
-                          icon: Icon(
-                            Icons.switch_left,
-                            size: heightPerCentage(context, 0.03),
-                          ),
-                          color: Colors.blue,
-                        ),
+                          });
+                        },
                       ),
-                    ),
+                    )),
+                rowDivider(),
+                //out Text
+                outTextHintOrText(context),
+                rowDivider(),
+                //buttons
+                Container(
+                  margin: EdgeInsets.only(
+                    left: 15,
+                    right: 15.0,
                   ),
-                  Container(
-                    width: widthPerCentage(context, 0.3),
-                    margin: EdgeInsets.only(right: 10.0),
-                    child: TextButton(
-                      child: Text(
-                        languageDestanation,
-                        style: TextStyle(fontSize: 25),
-                      ),
-                      onPressed: () => {chooseDestanationLanguage()},
-                    ),
-                  ),
-                ],
-              )),
-          rowDivider(),
-          //Enter text
-          Container(
-              margin: EdgeInsets.only(
-                left: 15,
-              ),
-              width: widthPerCentage(context, 1),
-              height: heightPerCentage(context, 0.16),
-              child: SingleChildScrollView(
-                child: TextField(
-                  controller: controllerTranslatedField,
-                  decoration: InputDecoration(
-                    hintText: 'Enter text...',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                  maxLines: null,
-                  onChanged: (value) {
-                    setState(() {
-                      translation = translate(value);
+                  width: widthPerCentage(context, 1),
+                  height: heightPerCentage(context, 0.07),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        //Icon Bookmark
+                        // ignore: avoid_unnecessary_containers
+                        Container(
+                          child: ClipOval(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  if (controllerTranslatedField.text != "" &&
+                                      bookmarkBtnIcon != Icons.bookmark) {
+                                    setState(() {
+                                      bookmarkBtnIcon = Icons.bookmark;
+                                    });
 
-                      isBookmarked();
-                    });
-                  },
+                                    //add item
+                                    _addItem(
+                                        controllerTranslatedField.text,
+                                        translation,
+                                        languageSource,
+                                        languageDestanation);
+                                  }
+                                },
+                                icon: Icon(bookmarkBtnIcon,
+                                    size: heightPerCentage(context, 0.035)),
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //Icon Paste
+                        // ignore: avoid_unnecessary_containers
+                        Container(
+                          child: ClipOval(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  _getClipboardText();
+                                },
+                                icon: Icon(
+                                  Icons.paste_outlined,
+                                  size: heightPerCentage(context, 0.035),
+                                ),
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
                 ),
-              )),
-          rowDivider(),
-          //out Text
-          outTextHintOrText(context),
-          rowDivider(),
-          //buttons
-          Container(
-            margin: EdgeInsets.only(
-              left: 15,
-              right: 15.0,
+                Container(),
+              ],
             ),
-            width: widthPerCentage(context, 1),
-            height: heightPerCentage(context, 0.07),
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //Icon Bookmark
-                  // ignore: avoid_unnecessary_containers
-                  Container(
-                    child: ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            if (controllerTranslatedField.text != "" &&
-                                bookmarkBtnIcon != Icons.bookmark) {
-                              setState(() {
-                                bookmarkBtnIcon = Icons.bookmark;
-                              });
-
-                              //add item
-                              _addItem(
-                                  controllerTranslatedField.text,
-                                  translation,
-                                  languageSource,
-                                  languageDestanation);
-                            }
-                          },
-                          icon: Icon(bookmarkBtnIcon,
-                              size: heightPerCentage(context, 0.035)),
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ),
-                  //Icon Paste
-                  // ignore: avoid_unnecessary_containers
-                  Container(
-                    child: ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            _getClipboardText();
-                          },
-                          icon: Icon(
-                            Icons.paste_outlined,
-                            size: heightPerCentage(context, 0.035),
-                          ),
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ),
-                ]),
-          ),
-          Container(),
-        ],
-      ),
-    );
+          );
   }
 
   @override
@@ -296,7 +314,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       groupValue: languageSource,
                       onChanged: (value) {
                         setState(() {
-                          languageSource = value.toString();
+                          setLanguageSource(value.toString());
                         });
                       },
                     ),
@@ -313,7 +331,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       groupValue: languageSource,
                       onChanged: (value) {
                         setState(() {
-                          languageSource = value.toString();
+                          setLanguageSource(value.toString());
                         });
                       },
                     ),
@@ -330,7 +348,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       groupValue: languageSource,
                       onChanged: (value) {
                         setState(() {
-                          languageSource = value.toString();
+                          setLanguageSource(value.toString());
                         });
                       },
                     ),
@@ -347,7 +365,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       groupValue: languageSource,
                       onChanged: (value) {
                         setState(() {
-                          languageSource = value.toString();
+                          setLanguageSource(value.toString());
                         });
                       },
                     )
@@ -359,7 +377,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
         }).then((val) {
       setState(() {
         if (languageSource == languageDestanation) {
-          languageDestanation = prev;
+          setLanguageDestanation(prev);
           controllerTranslatedField.text = translation;
           translation = translate(controllerTranslatedField.text);
         }
@@ -405,7 +423,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         groupValue: languageDestanation,
                         onChanged: (value) {
                           setState(() {
-                            languageDestanation = value.toString();
+                            setLanguageDestanation(value.toString());
                           });
                         },
                       ),
@@ -422,7 +440,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         groupValue: languageDestanation,
                         onChanged: (value) {
                           setState(() {
-                            languageDestanation = value.toString();
+                            setLanguageDestanation(value.toString());
                           });
                         },
                       ),
@@ -439,7 +457,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         groupValue: languageDestanation,
                         onChanged: (value) {
                           setState(() {
-                            languageDestanation = value.toString();
+                            setLanguageDestanation(value.toString());
                           });
                         },
                       ),
@@ -456,7 +474,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         groupValue: languageDestanation,
                         onChanged: (value) {
                           setState(() {
-                            languageDestanation = value.toString();
+                            setLanguageDestanation(value.toString());
                           });
                         },
                       )
@@ -467,7 +485,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
         }).then((val) {
       setState(() {
         if (languageDestanation == languageSource) {
-          languageSource = prev;
+          setLanguageSource(prev);
           controllerTranslatedField.text = translation;
           translation = translate(controllerTranslatedField.text);
         }
