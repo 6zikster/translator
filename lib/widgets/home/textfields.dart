@@ -31,6 +31,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   void _initLanguages() async {
     await initLanguageSource();
     await initLanguageDestanation();
+    final data = await SQLHelper.getItems();
+    bookmarkedWords = data;
     setState(() {
       isLoading = false;
     });
@@ -257,7 +259,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
           margin: EdgeInsets.only(left: 15),
           height: heightPerCentage(context, 0.16),
           child: SingleChildScrollView(
-            child: Text(
+            child: SelectableText(
               translation,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
@@ -274,7 +276,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
             ),
           ));
     }
-    return res;
+    return SingleChildScrollView(child: res);
   }
 
   //function returns dialog in which we choose source language
@@ -407,79 +409,79 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
               shadowColor: Colors.transparent,
               // ignore: sized_box_for_whitespace
               content: Container(
-                  height: heightPerCentage(context, 0.28),
-                  child: Column(
-                    children: [
-                      RadioListTile(
-                        fillColor: MaterialStateProperty.all(Colors.blue),
-                        title: Text(
-                          languages[0],
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        value: languages[0],
-                        groupValue: languageDestanation,
-                        onChanged: (value) {
-                          setState(() {
-                            setLanguageDestanation(value.toString());
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        fillColor: MaterialStateProperty.all(Colors.blue),
-                        title: Text(
-                          languages[1],
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        value: languages[1],
-                        groupValue: languageDestanation,
-                        onChanged: (value) {
-                          setState(() {
-                            setLanguageDestanation(value.toString());
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        fillColor: MaterialStateProperty.all(Colors.blue),
-                        title: Text(
-                          languages[2],
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        value: languages[2],
-                        groupValue: languageDestanation,
-                        onChanged: (value) {
-                          setState(() {
-                            setLanguageDestanation(value.toString());
-                          });
-                        },
-                      ),
-                      RadioListTile(
-                        fillColor: MaterialStateProperty.all(Colors.blue),
-                        title: Text(
-                          languages[3],
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        value: languages[3],
-                        groupValue: languageDestanation,
-                        onChanged: (value) {
-                          setState(() {
-                            setLanguageDestanation(value.toString());
-                          });
-                        },
-                      )
-                    ],
-                  )),
+                  child: SingleChildScrollView(
+                      child: Column(
+                children: [
+                  RadioListTile(
+                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    title: Text(
+                      languages[0],
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    value: languages[0],
+                    groupValue: languageDestanation,
+                    onChanged: (value) {
+                      setState(() {
+                        setLanguageDestanation(value.toString());
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    title: Text(
+                      languages[1],
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    value: languages[1],
+                    groupValue: languageDestanation,
+                    onChanged: (value) {
+                      setState(() {
+                        setLanguageDestanation(value.toString());
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    title: Text(
+                      languages[2],
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    value: languages[2],
+                    groupValue: languageDestanation,
+                    onChanged: (value) {
+                      setState(() {
+                        setLanguageDestanation(value.toString());
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    title: Text(
+                      languages[3],
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    value: languages[3],
+                    groupValue: languageDestanation,
+                    onChanged: (value) {
+                      setState(() {
+                        setLanguageDestanation(value.toString());
+                      });
+                    },
+                  )
+                ],
+              ))),
             );
           });
         }).then((val) {

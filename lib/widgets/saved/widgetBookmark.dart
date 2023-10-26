@@ -105,8 +105,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
     String flagDestanation = bookmarkedWords[index]['flagDestanation'];
 
     await SQLHelper.deleteItem(id);
-    _refreshJournals();
-
+    await _refreshJournals();
     keyToWords.currentState!.removeItem(
       index,
       (_, animation) {
@@ -181,10 +180,14 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
     );
   }
 
-  void _refreshJournals() async {
+  Future<void> _refreshJournals() async {
     final data = await SQLHelper.getItems();
-    setState(() {
-      bookmarkedWords = data;
-    });
+    //setState(() {
+    bookmarkedWords = data;
+    //});
+    for (int i = 0; i < bookmarkedWords.length; i++) {
+      print("words: " + bookmarkedWords[i].toString());
+    }
+    print("words: -----------------");
   }
 }
