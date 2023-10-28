@@ -15,14 +15,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Column(
-        children: [
-          SizedBox(
-            height: heightPerCentage(context, 0.1),
-          ),
-          TextFieldsWidget(),
-        ],
+        body: SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              height: heightPerCentage(context, 0.1),
+            ),
+            TextFieldsWidget(),
+            SizedBox(
+              height: heightPerCentage(context, 0.1),
+            ),
+          ],
+        ),
       ),
     ));
   }

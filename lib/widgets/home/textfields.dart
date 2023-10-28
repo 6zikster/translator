@@ -58,7 +58,6 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
           )
         : Container(
             width: widthPerCentage(context, 0.9),
-            height: heightPerCentage(context, 0.48),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Color.fromARGB(255, 41, 41, 41)),
@@ -109,8 +108,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                   isBookmarked();
                                 },
                                 icon: Icon(
-                                  Icons.switch_left,
-                                  size: heightPerCentage(context, 0.03),
+                                  Icons.swap_horiz_outlined,
+                                  size: heightPerCentage(context, 0.045),
                                 ),
                                 color: Colors.blue,
                               ),
@@ -133,39 +132,45 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                 rowDivider(),
                 //Enter text
                 Container(
-                    margin: EdgeInsets.only(
-                      left: 15,
+                  margin:
+                      EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+                  constraints: BoxConstraints(
+                    minHeight: heightPerCentage(context, 0.15),
+                  ),
+                  child: TextField(
+                    controller: controllerTranslatedField,
+                    decoration: InputDecoration(
+                      hintText: 'Enter text...',
+                      hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
+                      border: InputBorder.none,
                     ),
-                    width: widthPerCentage(context, 1),
-                    height: heightPerCentage(context, 0.16),
-                    child: SingleChildScrollView(
-                      child: TextField(
-                        controller: controllerTranslatedField,
-                        decoration: InputDecoration(
-                          hintText: 'Enter text...',
-                          hintStyle: TextStyle(color: Colors.grey),
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                        maxLines: null,
-                        onChanged: (value) {
-                          setState(() {
-                            translation = translate(value);
-
-                            isBookmarked();
-                          });
-                        },
-                      ),
-                    )),
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                    maxLines: null,
+                    onChanged: (value) {
+                      setState(() {
+                        translation = translate(value);
+                        isBookmarked();
+                      });
+                    },
+                  ),
+                ),
                 rowDivider(),
                 //out Text
-                outTextHintOrText(context),
+                Container(
+                  margin:
+                      EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
+                  constraints: BoxConstraints(
+                    minHeight: heightPerCentage(context, 0.15),
+                  ),
+                  child: outTextHintOrText(context),
+                ),
                 rowDivider(),
                 //buttons
                 Container(
                   margin: EdgeInsets.only(
                     left: 15,
                     right: 15.0,
+                    bottom: 10,
                   ),
                   width: widthPerCentage(context, 1),
                   height: heightPerCentage(context, 0.07),
@@ -256,27 +261,20 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     if (translation != '') {
       res = Container(
           alignment: Alignment.topLeft,
-          margin: EdgeInsets.only(left: 15),
-          height: heightPerCentage(context, 0.16),
-          child: SingleChildScrollView(
-            child: SelectableText(
-              translation,
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            ),
+          child: SelectableText(
+            translation,
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ));
     } else {
       res = Container(
-          alignment: Alignment.topLeft,
-          margin: EdgeInsets.only(left: 15),
-          height: heightPerCentage(context, 0.16),
-          child: SingleChildScrollView(
-            child: Text(
-              "You'll see the translation here",
-              style: TextStyle(fontSize: 20, color: Colors.grey),
-            ),
-          ));
+        alignment: Alignment.topLeft,
+        child: Text(
+          "You'll see the translation here",
+          style: TextStyle(fontSize: 20, color: Colors.grey),
+        ),
+      );
     }
-    return SingleChildScrollView(child: res);
+    return res;
   }
 
   //function returns dialog in which we choose source language
