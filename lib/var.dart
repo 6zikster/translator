@@ -17,7 +17,7 @@ final GlobalKey<AnimatedListState> keyToWords = GlobalKey();
 List<String> languages = ["🇺🇸Eng", "🇷🇺Rus", "🇪🇸Spa", "🇫🇷Fr"];
 String languageSource = languages[0];
 String languageDestanation = languages[1];
-TextEditingController controllerTranslatedField = TextEditingController();
+TextEditingController controllerEnterText = TextEditingController();
 
 Future<void> setLanguageSource(String language) async {
   var prefs = await SharedPreferences.getInstance();

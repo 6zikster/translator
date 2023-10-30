@@ -13,7 +13,7 @@ class TextFieldsWidget extends StatefulWidget {
 }
 
 class _TextFieldsWidgetState extends State<TextFieldsWidget> {
-  String translation = "";
+  TextEditingController controllerOutText = TextEditingController();
   final translationController = TextEditingController();
   int selectedOption = 1;
   IconData? bookmarkBtnIcon = Icons.bookmark;
@@ -22,8 +22,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
 
   _TextFieldsWidgetState() {
     _initLanguages();
-    if (controllerTranslatedField.text != "") {
-      translation = translate(controllerTranslatedField.text);
+    if (controllerEnterText.text != "") {
+      controllerOutText.text = translate(controllerEnterText.text);
     }
     isBookmarked();
   }
@@ -47,6 +47,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     } else {
       res = textToTranslate;
     }
+    print("res " + res);
     return res;
   }
 
@@ -98,10 +99,10 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                     String temp = languageDestanation;
                                     languageDestanation = languageSource;
                                     languageSource = temp;
-                                    controllerTranslatedField.text =
-                                        translation;
-                                    translation = translate(
-                                        controllerTranslatedField.text);
+                                    controllerEnterText.text =
+                                        controllerOutText.text;
+                                    controllerOutText.text =
+                                        translate(controllerEnterText.text);
                                     setLanguageSource(languageSource);
                                     setLanguageDestanation(languageDestanation);
                                   });
@@ -138,7 +139,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     minHeight: heightPerCentage(context, 0.15),
                   ),
                   child: TextField(
-                    controller: controllerTranslatedField,
+                    controller: controllerEnterText,
                     decoration: InputDecoration(
                       hintText: 'Enter text...',
                       hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
@@ -148,7 +149,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     maxLines: null,
                     onChanged: (value) {
                       setState(() {
-                        translation = translate(value);
+                        controllerOutText.text = translate(value);
+                        print("res2 " + controllerOutText.text);
                         isBookmarked();
                       });
                     },
@@ -170,12 +172,10 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                   margin: EdgeInsets.only(
                     left: 15,
                     right: 15.0,
-                    bottom: 10,
                   ),
-                  width: widthPerCentage(context, 1),
                   height: heightPerCentage(context, 0.07),
                   child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         //Icon Bookmark
@@ -187,7 +187,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                               child: IconButton(
                                 padding: EdgeInsets.zero,
                                 onPressed: () {
-                                  if (controllerTranslatedField.text != "" &&
+                                  if (controllerEnterText.text != "" &&
                                       bookmarkBtnIcon != Icons.bookmark) {
                                     setState(() {
                                       bookmarkBtnIcon = Icons.bookmark;
@@ -195,8 +195,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
 
                                     //add item
                                     _addItem(
-                                        controllerTranslatedField.text,
-                                        translation,
+                                        controllerEnterText.text,
+                                        controllerOutText.text,
                                         languageSource,
                                         languageDestanation);
                                   }
@@ -230,7 +230,6 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         ),
                       ]),
                 ),
-                Container(),
               ],
             ),
           );
@@ -246,34 +245,29 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   Widget rowDivider() {
     // ignore: sized_box_for_whitespace
     return Container(
-      height: heightPerCentage(context, 0.005),
-      child: Divider(
-        thickness: heightPerCentage(context, 0.001),
-        indent: 20,
-        endIndent: 20,
-        color: Colors.blueAccent,
-      ),
+      height: heightPerCentage(context, 0.001),
+      color: Colors.blueAccent,
+      margin: EdgeInsets.only(left: 15, right: 15),
     );
   }
 
   Widget outTextHintOrText(BuildContext context) {
     Widget res;
-    if (translation != '') {
-      res = Container(
-          alignment: Alignment.topLeft,
-          child: SelectableText(
-            translation,
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ));
-    } else {
-      res = Container(
+
+    res = Container(
         alignment: Alignment.topLeft,
-        child: Text(
-          "You'll see the translation here",
-          style: TextStyle(fontSize: 20, color: Colors.grey),
-        ),
-      );
-    }
+        child: TextField(
+          readOnly: true,
+          maxLines: null,
+          controller: controllerOutText,
+          decoration: InputDecoration(
+            hintText: "You'll see the translation here",
+            hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
+            border: InputBorder.none,
+          ),
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ));
+
     return res;
   }
 
@@ -378,8 +372,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
       setState(() {
         if (languageSource == languageDestanation) {
           setLanguageDestanation(prev);
-          controllerTranslatedField.text = translation;
-          translation = translate(controllerTranslatedField.text);
+          controllerEnterText.text = controllerOutText.text;
+          controllerOutText.text = translate(controllerEnterText.text);
         }
         isBookmarked();
       });
@@ -486,8 +480,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
       setState(() {
         if (languageDestanation == languageSource) {
           setLanguageSource(prev);
-          controllerTranslatedField.text = translation;
-          translation = translate(controllerTranslatedField.text);
+          controllerEnterText.text = controllerOutText.text;
+          controllerOutText.text = translate(controllerEnterText.text);
         }
 
         isBookmarked();
@@ -507,7 +501,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
       flgSrc = bookmarkedWords[i]['flagSource'];
       flgDst = bookmarkedWords[i]['flagDestanation'];
 
-      if (strSrc == controllerTranslatedField.text &&
+      if (strSrc == controllerEnterText.text &&
           flgSrc == languageSource &&
           flgDst == languageDestanation) {
         flagBookmarkBtnIcon = true;
@@ -524,9 +518,9 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   void _getClipboardText() async {
     final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
     String? clipboardText = clipboardData?.text;
-    controllerTranslatedField.text = clipboardText!;
+    controllerEnterText.text = clipboardText!;
     setState(() {
-      translation = translate(controllerTranslatedField.text);
+      controllerOutText.text = translate(controllerEnterText.text);
     });
     isBookmarked();
   }
