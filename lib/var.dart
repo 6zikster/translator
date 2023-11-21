@@ -48,3 +48,6 @@ Future<String> getLanguageDestanation() async {
 Future initLanguageDestanation() async {
   languageDestanation = await getLanguageDestanation();
 }
+
+String lastRequest =
+    DateTime.now().subtract(const Duration(hours: 3)).toString();

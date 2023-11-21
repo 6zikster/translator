@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:translator/var.dart';
 import 'package:translator/db/db.dart';
+import 'dart:async';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class TextFieldsWidget extends StatefulWidget {
   const TextFieldsWidget({Key? key}) : super(key: key);
@@ -22,9 +26,10 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
 
   _TextFieldsWidgetState() {
     _initLanguages();
-    if (controllerEnterText.text != "") {
-      controllerOutText.text = translate(controllerEnterText.text);
-    }
+    controllerEnterText.text = "";
+    //if (controllerEnterText.text != "") {
+    //translate(controllerEnterText.text, context);
+    //}
     isBookmarked();
   }
 
@@ -38,17 +43,81 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     });
   }
 
-  String translate(String textToTranslate) {
-    String res = "";
-    if (textToTranslate == "legendary") {
-      res = "легендарноо";
-    } else if (textToTranslate == "легендарно") {
-      res = "legendary";
-    } else {
-      res = textToTranslate;
+  void translate(String textToTranslate, BuildContext context) async {
+    if (textToTranslate.isNotEmpty) {
+      if (textToTranslate[textToTranslate.length - 1] != "." ||
+          textToTranslate[textToTranslate.length - 1] != "!" ||
+          textToTranslate[textToTranslate.length - 1] != "?") {
+        textToTranslate += ".";
+      }
     }
-    print("res " + res);
-    return res;
+
+    Map data = {
+      "inputText": textToTranslate,
+      "source": languageSource.substring(4),
+      "destanation": languageDestanation.substring(4),
+      "requestData": DateTime.now().toString()
+    };
+
+    var jsonData = jsonEncode(data);
+
+    var url = 'http://185.119.196.48:8001';
+
+    String textFromRequest = controllerOutText.text;
+    String outData = lastRequest;
+    try {
+      await http
+          .post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonData,
+      )
+          .then((response) {
+        try {
+          var jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+          var outputText = jsonResponse['outputText'];
+          textFromRequest = "$outputText";
+          var outputData = jsonResponse['requestData'];
+          outData = outputData;
+        } catch (e) {
+          print("translate: Error parsing JSON: " + "$e");
+        }
+      });
+    } catch (e) {
+      print("translate: Error: " + "$e");
+      if ("$e" !=
+          "ClientException: Connection reset by peer, uri=http://185.119.196.48:8001") {
+        const snack = SnackBar(
+          content: Text('Error occured. '),
+          backgroundColor: Colors.red,
+          elevation: 20,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(5),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snack);
+      }
+    }
+    //print("translate: b4 cmp");
+    //bool temp = timeCmp(lastRequest, outData);
+    //print("translate: $temp");
+
+    //print("translate: lastRequest: $lastRequest");
+    //print("translate: outData: $outData");
+
+    if (timeCmp(lastRequest, outData)) {
+      //print("translate: cmp");
+      textFromRequest = textFromRequest.replaceAll(" ,", ",");
+      textFromRequest = textFromRequest.replaceAll(" .", ".");
+      textFromRequest = textFromRequest.replaceAll(" !", "!");
+      textFromRequest = textFromRequest.replaceAll(" ?", "?");
+      controllerOutText.text = textFromRequest;
+      lastRequest = outData;
+      //print("translate: $outData");
+    }
+
+    if (textToTranslate.isEmpty) {
+      controllerOutText.text = "";
+    }
   }
 
   @override
@@ -101,8 +170,9 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                     languageSource = temp;
                                     controllerEnterText.text =
                                         controllerOutText.text;
-                                    controllerOutText.text =
-                                        translate(controllerEnterText.text);
+
+                                    translate(
+                                        controllerEnterText.text, context);
                                     setLanguageSource(languageSource);
                                     setLanguageDestanation(languageDestanation);
                                   });
@@ -149,8 +219,9 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     maxLines: null,
                     onChanged: (value) {
                       setState(() {
-                        controllerOutText.text = translate(value);
-                        print("res2 " + controllerOutText.text);
+                        int temp = value.length;
+                        print("translate: len: $temp");
+                        translate(value, context);
                         isBookmarked();
                       });
                     },
@@ -373,7 +444,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
         if (languageSource == languageDestanation) {
           setLanguageDestanation(prev);
           controllerEnterText.text = controllerOutText.text;
-          controllerOutText.text = translate(controllerEnterText.text);
+          translate(controllerEnterText.text, context);
         }
         isBookmarked();
       });
@@ -481,7 +552,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
         if (languageDestanation == languageSource) {
           setLanguageSource(prev);
           controllerEnterText.text = controllerOutText.text;
-          controllerOutText.text = translate(controllerEnterText.text);
+          translate(controllerEnterText.text, context);
         }
 
         isBookmarked();
@@ -520,7 +591,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     String? clipboardText = clipboardData?.text;
     controllerEnterText.text = clipboardText!;
     setState(() {
-      controllerOutText.text = translate(controllerEnterText.text);
+      translate(controllerEnterText.text, context);
     });
     isBookmarked();
   }
@@ -530,5 +601,16 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     await SQLHelper.createItem(src, dst, flagSrc, flagDst);
     final data = await SQLHelper.getItems();
     bookmarkedWords = data;
+  }
+
+  bool timeCmp(String cmp1, String cmp2) {
+    DateTime a = DateTime.parse(cmp1);
+    DateTime b = DateTime.parse(cmp2);
+    final Duration duration = a.difference(b);
+    if (duration.isNegative) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
