@@ -23,6 +23,7 @@ dependencies:
   path: ^1.8.3
   shared_preferences: ^2.2.2
   http: ^1.1.0
+  provider: 
 
 dev_dependencies:
   flutter_test:

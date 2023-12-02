@@ -29,4 +29,8 @@ ThemeData lightTheme = ThemeData(
     titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
     shadowColor: Colors.grey.shade900,
   ),
+  textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.blue,
+      selectionColor: Colors.blue,
+      selectionHandleColor: Colors.blue),
 );

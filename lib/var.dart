@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:translator/widgets/themes/dark_theme.dart';
 
 double widthPerCentage(BuildContext context, double percentage) {
   return MediaQuery.of(context).size.width *
@@ -51,3 +52,5 @@ Future initLanguageDestanation() async {
 
 String lastRequest =
     DateTime.now().subtract(const Duration(hours: 3)).toString();
+
+ThemeData prefTheme = darkTheme;

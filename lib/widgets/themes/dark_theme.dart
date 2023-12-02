@@ -28,4 +28,8 @@ ThemeData darkTheme = ThemeData(
     titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
     shadowColor: Colors.grey.shade900,
   ),
+  textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.blue,
+      selectionColor: Colors.blue,
+      selectionHandleColor: Colors.blue),
 );

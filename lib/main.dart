@@ -1,16 +1,32 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/widgets/home/home.dart';
 import 'package:translator/widgets/saved/saved.dart';
 import 'package:translator/widgets/settings/settings.dart';
 import 'package:translator/widgets/themes/dark_theme.dart';
 import 'package:translator/widgets/themes/light_theme.dart';
+
+import 'package:translator/widgets/themes/theme_provider.dart';
 import 'var.dart';
 import 'package:flutter/services.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
+
+  var prefs = await SharedPreferences.getInstance();
+  String prefThemeStr = prefs.getString("theme") ?? "dark";
+  if (prefThemeStr == "dark") {
+    prefTheme = darkTheme;
+  } else {
+    prefTheme = lightTheme;
+  }
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,8 +41,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: Provider.of<ThemeProvider>(context).themeData,
       home: MainPage(),
     );
   }

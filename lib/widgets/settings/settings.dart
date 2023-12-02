@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:translator/widgets/themes/theme_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -15,7 +17,9 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
         body: Center(
             child: OutlinedButton(
-      onPressed: () async {},
+      onPressed: () async {
+        Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+      },
       style: ButtonStyle(
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0))),
