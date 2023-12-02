@@ -34,12 +34,8 @@ class _SavedPageState extends State<SavedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade900,
-        shadowColor: Colors.grey.shade900, //shadow looks aweful
-        foregroundColor: Colors.white,
         title: Text(
           "Saved Words",
-          selectionColor: Colors.white,
         ),
       ),
       body: isLoading

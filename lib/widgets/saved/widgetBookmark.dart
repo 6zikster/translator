@@ -23,7 +23,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
       children: [
         Card(
             margin: const EdgeInsets.only(top: 10, left: 20),
-            color: const Color.fromARGB(255, 41, 41, 41),
+            color: Theme.of(context).colorScheme.primary,
             // ignore: sized_box_for_whitespace
             child: Container(
               width: widthPerCentage(context, 0.8),
@@ -45,8 +45,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                         Flexible(
                           child: Text(
                             bookmarkedWords[index]['strSource'],
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 24),
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         )
                       ],
@@ -56,7 +55,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                     thickness: heightPerCentage(context, 0.001),
                     indent: 20,
                     endIndent: 20,
-                    color: Colors.blueAccent,
+                    color: Theme.of(context).buttonTheme.colorScheme?.primary,
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
@@ -74,8 +73,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                         Flexible(
                           child: Text(
                             bookmarkedWords[index]['strDestanation'],
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 24),
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         )
                       ],
@@ -113,7 +111,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
           sizeFactor: animation,
           child: Card(
               margin: const EdgeInsets.only(top: 10, left: 20),
-              color: const Color.fromARGB(255, 129, 38, 32),
+              color: Colors.redAccent,
               // ignore: sized_box_for_whitespace
               child: Container(
                 width: widthPerCentage(context, 0.8),
@@ -135,8 +133,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                           Flexible(
                             child: Text(
                               strSource,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 24),
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           )
                         ],
@@ -146,7 +143,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                       thickness: heightPerCentage(context, 0.001),
                       indent: 20,
                       endIndent: 20,
-                      color: Colors.blueAccent,
+                      color: Theme.of(context).buttonTheme.colorScheme?.primary,
                     ),
                     Container(
                       margin:
@@ -164,8 +161,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                           Flexible(
                             child: Text(
                               strDestanation,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 24),
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           )
                         ],

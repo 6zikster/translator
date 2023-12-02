@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:translator/widgets/home/home.dart';
 import 'package:translator/widgets/saved/saved.dart';
 import 'package:translator/widgets/settings/settings.dart';
+import 'package:translator/widgets/themes/dark_theme.dart';
+import 'package:translator/widgets/themes/light_theme.dart';
 import 'var.dart';
 import 'package:flutter/services.dart';
 
@@ -20,10 +22,11 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme:
-          ThemeData(scaffoldBackgroundColor: Color.fromARGB(221, 31, 29, 29)),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       home: MainPage(),
     );
   }
@@ -47,16 +50,16 @@ class _MainPageState extends State<MainPage> {
         body: screens[index],
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
-            backgroundColor: Colors.black,
+            backgroundColor:
+                Theme.of(context).bottomNavigationBarTheme.backgroundColor,
             indicatorColor: Colors.blue,
             labelTextStyle: MaterialStateProperty.all(
-              TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white),
+              TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
           child: NavigationBar(
+            backgroundColor:
+                Theme.of(context).bottomNavigationBarTheme.backgroundColor,
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             animationDuration: Duration(milliseconds: 500),
             selectedIndex: index,
@@ -64,30 +67,45 @@ class _MainPageState extends State<MainPage> {
               this.index = index;
             }),
             height: heightPerCentage(context, 0.11),
-            destinations: const [
+            destinations: [
               NavigationDestination(
-                icon: Icon(
-                  Icons.home_outlined,
-                  color: Colors.white,
-                ),
+                icon: Icon(Icons.home_outlined,
+                    color: Theme.of(context)
+                        .bottomNavigationBarTheme
+                        .unselectedItemColor),
                 label: "Home",
-                selectedIcon: Icon(Icons.home_rounded),
+                selectedIcon: Icon(Icons.home_rounded,
+                    color: Theme.of(context)
+                        .bottomNavigationBarTheme
+                        .selectedItemColor),
               ),
               NavigationDestination(
                 icon: Icon(
                   Icons.bookmark_outline,
-                  color: Colors.white,
+                  color: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .unselectedItemColor,
                 ),
                 label: "Saved",
-                selectedIcon: Icon(Icons.bookmark_rounded),
+                selectedIcon: Icon(
+                  Icons.bookmark_rounded,
+                  color: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .selectedItemColor,
+                ),
               ),
               NavigationDestination(
                 icon: Icon(
                   Icons.settings_outlined,
-                  color: Colors.white,
+                  color: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .unselectedItemColor,
                 ),
                 label: "Settings",
-                selectedIcon: Icon(Icons.settings_rounded),
+                selectedIcon: Icon(Icons.settings_rounded,
+                    color: Theme.of(context)
+                        .bottomNavigationBarTheme
+                        .selectedItemColor),
               )
             ],
           ),

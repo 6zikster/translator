@@ -88,7 +88,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
       if ("$e" !=
           "ClientException: Connection reset by peer, uri=http://185.119.196.48:8001") {
         const snack = SnackBar(
-          content: Text('Error occured. '),
+          content: Text('No connection to the server. '),
           backgroundColor: Colors.red,
           elevation: 20,
           behavior: SnackBarBehavior.floating,
@@ -97,22 +97,22 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
         ScaffoldMessenger.of(context).showSnackBar(snack);
       }
     }
-    //print("translate: b4 cmp");
-    //bool temp = timeCmp(lastRequest, outData);
-    //print("translate: $temp");
-
-    //print("translate: lastRequest: $lastRequest");
-    //print("translate: outData: $outData");
 
     if (timeCmp(lastRequest, outData)) {
-      //print("translate: cmp");
       textFromRequest = textFromRequest.replaceAll(" ,", ",");
       textFromRequest = textFromRequest.replaceAll(" .", ".");
       textFromRequest = textFromRequest.replaceAll(" !", "!");
       textFromRequest = textFromRequest.replaceAll(" ?", "?");
+
+      while (textFromRequest[textFromRequest.length - 1] == ' ') {
+        if (textFromRequest.isNotEmpty) {
+          textFromRequest =
+              textFromRequest.substring(0, textFromRequest.length - 1);
+        }
+      }
+
       controllerOutText.text = textFromRequest;
       lastRequest = outData;
-      //print("translate: $outData");
     }
 
     if (textToTranslate.isEmpty) {
@@ -130,7 +130,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
             width: widthPerCentage(context, 0.9),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Color.fromARGB(255, 41, 41, 41)),
+                color: Theme.of(context).colorScheme.primary),
             child: Column(
               children: [
                 //language pick
@@ -149,7 +149,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                           child: TextButton(
                               child: Text(
                                 languageSource,
-                                style: TextStyle(fontSize: 25),
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Theme.of(context)
+                                        .buttonTheme
+                                        .colorScheme
+                                        ?.primary),
                               ),
                               onPressed: () {
                                 //Choose source language
@@ -181,8 +186,11 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                 icon: Icon(
                                   Icons.swap_horiz_outlined,
                                   size: heightPerCentage(context, 0.045),
+                                  color: Theme.of(context)
+                                      .buttonTheme
+                                      .colorScheme
+                                      ?.primary,
                                 ),
-                                color: Colors.blue,
                               ),
                             ),
                           ),
@@ -193,7 +201,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                           child: TextButton(
                             child: Text(
                               languageDestanation,
-                              style: TextStyle(fontSize: 25),
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  color: Theme.of(context)
+                                      .buttonTheme
+                                      .colorScheme
+                                      ?.primary),
                             ),
                             onPressed: () => {chooseDestanationLanguage()},
                           ),
@@ -212,10 +225,10 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     controller: controllerEnterText,
                     decoration: InputDecoration(
                       hintText: 'Enter text...',
-                      hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
+                      hintStyle: Theme.of(context).textTheme.labelMedium,
                       border: InputBorder.none,
                     ),
-                    style: TextStyle(fontSize: 20, color: Colors.white),
+                    style: TextStyle(fontSize: 20),
                     maxLines: null,
                     onChanged: (value) {
                       setState(() {
@@ -274,7 +287,10 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                 },
                                 icon: Icon(bookmarkBtnIcon,
                                     size: heightPerCentage(context, 0.035)),
-                                color: Colors.blue,
+                                color: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme
+                                    ?.primary,
                               ),
                             ),
                           ),
@@ -294,7 +310,10 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                   Icons.paste_outlined,
                                   size: heightPerCentage(context, 0.035),
                                 ),
-                                color: Colors.blue,
+                                color: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme
+                                    ?.primary,
                               ),
                             ),
                           ),
@@ -317,7 +336,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     // ignore: sized_box_for_whitespace
     return Container(
       height: heightPerCentage(context, 0.001),
-      color: Colors.blueAccent,
+      color: Theme.of(context).buttonTheme.colorScheme?.primary,
       margin: EdgeInsets.only(left: 15, right: 15),
     );
   }
@@ -333,10 +352,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
           controller: controllerOutText,
           decoration: InputDecoration(
             hintText: "You'll see the translation here",
-            hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
+            hintStyle: Theme.of(context).textTheme.labelMedium,
             border: InputBorder.none,
           ),
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          style: TextStyle(
+            fontSize: 20,
+          ),
         ));
 
     return res;
@@ -356,8 +377,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
               )),
               title: Text(
                 "Choose language",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               backgroundColor: Color.fromARGB(255, 48, 46, 49),
               shadowColor: Colors.transparent,
@@ -367,13 +387,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                 child: Column(
                   children: [
                     RadioListTile(
-                      fillColor: MaterialStateProperty.all(Colors.blue),
+                      fillColor: MaterialStateProperty.all(
+                          Theme.of(context).buttonTheme.colorScheme?.primary),
                       title: Text(
                         languages[0],
                         style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       value: languages[0],
                       groupValue: languageSource,
@@ -384,13 +403,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       },
                     ),
                     RadioListTile(
-                      fillColor: MaterialStateProperty.all(Colors.blue),
+                      fillColor: MaterialStateProperty.all(
+                          Theme.of(context).buttonTheme.colorScheme?.primary),
                       title: Text(
                         languages[1],
                         style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       value: languages[1],
                       groupValue: languageSource,
@@ -401,13 +419,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       },
                     ),
                     RadioListTile(
-                      fillColor: MaterialStateProperty.all(Colors.blue),
+                      fillColor: MaterialStateProperty.all(
+                          Theme.of(context).buttonTheme.colorScheme?.primary),
                       title: Text(
                         languages[2],
                         style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       value: languages[2],
                       groupValue: languageSource,
@@ -418,13 +435,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       },
                     ),
                     RadioListTile(
-                      fillColor: MaterialStateProperty.all(Colors.blue),
+                      fillColor: MaterialStateProperty.all(
+                          Theme.of(context).buttonTheme.colorScheme?.primary),
                       title: Text(
                         languages[3],
                         style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       value: languages[3],
                       groupValue: languageSource,
@@ -465,8 +481,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
               )),
               title: Text(
                 "Choose language",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               backgroundColor: Color.fromARGB(255, 48, 46, 49),
               shadowColor: Colors.transparent,
@@ -476,13 +491,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       child: Column(
                 children: [
                   RadioListTile(
-                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    fillColor: MaterialStateProperty.all(
+                        Theme.of(context).buttonTheme.colorScheme?.primary),
                     title: Text(
                       languages[0],
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     value: languages[0],
                     groupValue: languageDestanation,
@@ -493,13 +507,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     },
                   ),
                   RadioListTile(
-                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    fillColor: MaterialStateProperty.all(
+                        Theme.of(context).buttonTheme.colorScheme?.primary),
                     title: Text(
                       languages[1],
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     value: languages[1],
                     groupValue: languageDestanation,
@@ -510,13 +523,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     },
                   ),
                   RadioListTile(
-                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    fillColor: MaterialStateProperty.all(
+                        Theme.of(context).buttonTheme.colorScheme?.primary),
                     title: Text(
                       languages[2],
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     value: languages[2],
                     groupValue: languageDestanation,
@@ -527,13 +539,12 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     },
                   ),
                   RadioListTile(
-                    fillColor: MaterialStateProperty.all(Colors.blue),
+                    fillColor: MaterialStateProperty.all(
+                        Theme.of(context).buttonTheme.colorScheme?.primary),
                     title: Text(
                       languages[3],
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     value: languages[3],
                     groupValue: languageDestanation,
