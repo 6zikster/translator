@@ -23,6 +23,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   IconData? bookmarkBtnIcon = Icons.bookmark;
 
   bool isLoading = true;
+  bool _isSnackbarActive = false;
 
   _TextFieldsWidgetState() {
     _initLanguages();
@@ -86,7 +87,9 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     } catch (e) {
       print("translate: Error: " + "$e");
       if ("$e" !=
-          "ClientException: Connection reset by peer, uri=http://185.119.196.48:8001") {
+              "ClientException: Connection reset by peer, uri=http://185.119.196.48:8001" &&
+          !_isSnackbarActive) {
+        _isSnackbarActive = true;
         const snack = SnackBar(
           content: Text('No connection to the server. '),
           backgroundColor: Colors.red,
@@ -94,7 +97,13 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
           behavior: SnackBarBehavior.floating,
           margin: EdgeInsets.all(5),
         );
-        ScaffoldMessenger.of(context).showSnackBar(snack);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(snack)
+            .closed
+            .then((SnackBarClosedReason reason) {
+          // snackbar is now closed.
+          _isSnackbarActive = false;
+        });
       }
     }
 
@@ -213,7 +222,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         ),
                       ],
                     )),
-                rowDivider(),
+                columnDivider(),
                 //Enter text
                 Container(
                   margin:
@@ -240,7 +249,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                     },
                   ),
                 ),
-                rowDivider(),
+                columnDivider(),
                 //out Text
                 Container(
                   margin:
@@ -250,7 +259,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                   ),
                   child: outTextHintOrText(context),
                 ),
-                rowDivider(),
+                columnDivider(),
                 //buttons
                 Container(
                   margin: EdgeInsets.only(
@@ -298,22 +307,46 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         //Icon Paste
                         // ignore: avoid_unnecessary_containers
                         Container(
-                          child: ClipOval(
-                            child: Material(
-                              type: MaterialType.transparency,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () {
-                                  _getClipboardText();
-                                },
-                                icon: Icon(
-                                  Icons.paste_outlined,
-                                  size: heightPerCentage(context, 0.035),
-                                ),
+                          decoration: BoxDecoration(
+                              border: Border.all(
                                 color: Theme.of(context)
                                     .buttonTheme
-                                    .colorScheme
-                                    ?.primary,
+                                    .colorScheme!
+                                    .primary,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                              onTap: () {
+                                _getClipboardText();
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Icon(
+                                        Icons.paste,
+                                        color: Theme.of(context)
+                                            .buttonTheme
+                                            .colorScheme!
+                                            .primary,
+                                      ),
+                                      Text(
+                                        " Paste ",
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .buttonTheme
+                                                .colorScheme!
+                                                .primary,
+                                            fontSize: 18),
+                                      ),
+                                    ]),
                               ),
                             ),
                           ),
@@ -332,7 +365,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     super.dispose();
   }
 
-  Widget rowDivider() {
+  Widget columnDivider() {
     // ignore: sized_box_for_whitespace
     return Container(
       height: heightPerCentage(context, 0.001),
@@ -483,7 +516,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                 "Choose language",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              backgroundColor: Color.fromARGB(255, 48, 46, 49),
+              backgroundColor: Theme.of(context).colorScheme.background,
               shadowColor: Colors.transparent,
               // ignore: sized_box_for_whitespace
               content: Container(

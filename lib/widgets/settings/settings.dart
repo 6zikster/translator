@@ -31,13 +31,13 @@ class _SettingsPageState extends State<SettingsPage> {
           child: IntrinsicWidth(
               child: Row(
             children: [
+              Icon(Icons.format_paint_outlined,
+                  color: Theme.of(context).buttonTheme.colorScheme?.primary),
               Text(
-                "Change theme",
+                " Change theme",
                 style: TextStyle(
                     color: Theme.of(context).buttonTheme.colorScheme?.primary),
               ),
-              Icon(Icons.format_paint_outlined,
-                  color: Theme.of(context).buttonTheme.colorScheme?.primary)
             ],
           )),
         ),
