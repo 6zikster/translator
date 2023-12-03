@@ -300,7 +300,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                         Container(
                           child: ClipOval(
                             child: Material(
-                              color: Colors.transparent,
+                              type: MaterialType.transparency,
                               child: IconButton(
                                 padding: EdgeInsets.zero,
                                 onPressed: () {
@@ -379,7 +379,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                 "Choose language",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              backgroundColor: Color.fromARGB(255, 48, 46, 49),
+              backgroundColor: Theme.of(context).colorScheme.background,
               shadowColor: Colors.transparent,
               // ignore: avoid_unnecessary_containers
               content: Container(
