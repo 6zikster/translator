@@ -37,6 +37,7 @@ class _SavedPageState extends State<SavedPage> {
         title: Text(
           "Saved Words",
         ),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
       body: isLoading
           ? Center(

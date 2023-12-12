@@ -24,7 +24,7 @@ ThemeData darkTheme = ThemeData(
     unselectedItemColor: Colors.white,
   ),
   appBarTheme: AppBarTheme(
-    color: Color.fromARGB(221, 31, 29, 29),
+    backgroundColor: Color.fromARGB(221, 15, 15, 15),
     titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
     shadowColor: Colors.grey.shade900,
   ),

@@ -25,7 +25,7 @@ ThemeData lightTheme = ThemeData(
     unselectedItemColor: Colors.black,
   ),
   appBarTheme: AppBarTheme(
-    color: Color.fromARGB(255, 179, 179, 179),
+    backgroundColor: Color.fromARGB(255, 179, 179, 179),
     titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
     shadowColor: Colors.grey.shade900,
   ),

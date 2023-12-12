@@ -153,6 +153,28 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Container(
+                          /*decoration: BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                color: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                                width: 2,
+                              ),
+                              left: BorderSide(
+                                color: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                                width: 2,
+                              ),
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.0),
+                              bottomLeft: Radius.circular(30.0),
+                            ),
+                          ),*/
                           margin: EdgeInsets.only(left: 10.0),
                           width: widthPerCentage(context, 0.3),
                           child: TextButton(
@@ -205,6 +227,29 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                           ),
                         ),
                         Container(
+                          /*decoration: BoxDecoration(
+                            border: Border(
+                              right: BorderSide(
+                                color: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                                width: 2,
+                              ),
+                              left: BorderSide(
+                                color: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                                width: 2,
+                              ),
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30.0),
+                              bottomRight: Radius.circular(30.0),
+                              
+                            ),
+                          ),*/
                           width: widthPerCentage(context, 0.3),
                           margin: EdgeInsets.only(right: 10.0),
                           child: TextButton(
@@ -262,97 +307,181 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                 columnDivider(),
                 //buttons
                 Container(
-                  margin: EdgeInsets.only(
-                    left: 15,
-                    right: 15.0,
-                  ),
-                  height: heightPerCentage(context, 0.07),
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        //Icon Bookmark
-                        // ignore: avoid_unnecessary_containers
-                        Container(
-                          child: ClipOval(
-                            child: Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () {
-                                  if (controllerEnterText.text != "" &&
-                                      bookmarkBtnIcon != Icons.bookmark) {
-                                    setState(() {
-                                      bookmarkBtnIcon = Icons.bookmark;
-                                    });
-
-                                    //add item
-                                    _addItem(
-                                        controllerEnterText.text,
-                                        controllerOutText.text,
-                                        languageSource,
-                                        languageDestanation);
-                                  }
-                                },
-                                icon: Icon(bookmarkBtnIcon,
-                                    size: heightPerCentage(context, 0.035)),
-                                color: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme
-                                    ?.primary,
+                    margin: EdgeInsets.only(
+                      left: 15,
+                      right: 15.0,
+                    ),
+                    height: heightPerCentage(context, 0.07),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //BTN bookmark ↓
+                            Container(
+                              padding: EdgeInsets.only(left: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .buttonTheme
+                                          .colorScheme!
+                                          .primary,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30)),
+                                    onTap: () {
+                                      if (controllerEnterText.text != "" &&
+                                          bookmarkBtnIcon != Icons.bookmark) {
+                                        setState(() {
+                                          bookmarkBtnIcon = Icons.bookmark;
+                                        });
+                                        //add item
+                                        _addItem(
+                                            controllerEnterText.text,
+                                            controllerOutText.text,
+                                            languageSource,
+                                            languageDestanation);
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(
+                                              bookmarkBtnIcon,
+                                              size: heightPerCentage(
+                                                  context, 0.035),
+                                              color: Theme.of(context)
+                                                  .buttonTheme
+                                                  .colorScheme!
+                                                  .primary,
+                                            ),
+                                            Text(
+                                              " Bookmark ",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .buttonTheme
+                                                      .colorScheme!
+                                                      .primary,
+                                                  fontSize: 18),
+                                            ),
+                                          ]),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        //Icon Paste
-                        // ignore: avoid_unnecessary_containers
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
-                              onTap: () {
-                                _getClipboardText();
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(
-                                        Icons.paste,
-                                        color: Theme.of(context)
-                                            .buttonTheme
-                                            .colorScheme!
-                                            .primary,
-                                      ),
-                                      Text(
-                                        " Paste ",
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .buttonTheme
-                                                .colorScheme!
-                                                .primary,
-                                            fontSize: 18),
-                                      ),
-                                    ]),
+                            //Icon Paste
+                            // ignore: avoid_unnecessary_containers
+                            Container(
+                              padding: EdgeInsets.only(left: 15),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .buttonTheme
+                                          .colorScheme!
+                                          .primary,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30)),
+                                    onTap: () {
+                                      _getClipboardText();
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(
+                                              Icons.paste,
+                                              color: Theme.of(context)
+                                                  .buttonTheme
+                                                  .colorScheme!
+                                                  .primary,
+                                            ),
+                                            Text(
+                                              " Paste ",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .buttonTheme
+                                                      .colorScheme!
+                                                      .primary,
+                                                  fontSize: 18),
+                                            ),
+                                          ]),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ]),
-                ),
+                            //BTN Clear
+                            Container(
+                              padding: EdgeInsets.only(left: 15, right: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .buttonTheme
+                                          .colorScheme!
+                                          .primary,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30)),
+                                    onTap: () {
+                                      controllerEnterText.text = "";
+                                      translate(
+                                          controllerEnterText.text, context);
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(
+                                              Icons.cleaning_services_outlined,
+                                              color: Theme.of(context)
+                                                  .buttonTheme
+                                                  .colorScheme!
+                                                  .primary,
+                                            ),
+                                            Text(
+                                              " Erase all ",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .buttonTheme
+                                                      .colorScheme!
+                                                      .primary,
+                                                  fontSize: 18),
+                                            ),
+                                          ]),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ]),
+                    )),
               ],
             ),
           );
