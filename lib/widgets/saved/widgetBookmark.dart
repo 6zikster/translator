@@ -55,7 +55,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                     thickness: heightPerCentage(context, 0.001),
                     indent: 20,
                     endIndent: 20,
-                    color: Theme.of(context).buttonTheme.colorScheme?.primary,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
@@ -143,7 +143,7 @@ class _WidgetBookmarkState extends State<WidgetBookmark> {
                       thickness: heightPerCentage(context, 0.001),
                       indent: 20,
                       endIndent: 20,
-                      color: Theme.of(context).buttonTheme.colorScheme?.primary,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     Container(
                       margin:

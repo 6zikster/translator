@@ -498,7 +498,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     // ignore: sized_box_for_whitespace
     return Container(
       height: heightPerCentage(context, 0.001),
-      color: Theme.of(context).buttonTheme.colorScheme?.primary,
+      color: Theme.of(context).colorScheme.secondary,
       margin: EdgeInsets.only(left: 15, right: 15),
     );
   }

@@ -7,6 +7,7 @@ ThemeData darkTheme = ThemeData(
   colorScheme: const ColorScheme.dark(
     background: Color.fromARGB(255, 28, 28, 28),
     primary: Color.fromARGB(255, 43, 43, 43),
+    secondary: Color.fromARGB(255, 160, 196, 238),
   ),
   textTheme: const TextTheme(
     displayMedium: TextStyle(color: Colors.white),

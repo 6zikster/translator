@@ -7,6 +7,7 @@ ThemeData lightTheme = ThemeData(
   colorScheme: const ColorScheme.light(
     background: Color.fromARGB(255, 255, 255, 255),
     primary: Color.fromARGB(255, 224, 224, 224),
+    secondary: Color.fromARGB(255, 47, 46, 51),
   ),
   textTheme: const TextTheme(
     displayMedium: TextStyle(color: Colors.black),
