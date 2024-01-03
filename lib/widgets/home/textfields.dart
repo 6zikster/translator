@@ -358,7 +358,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                             Icon(
                                               bookmarkBtnIcon,
                                               size: heightPerCentage(
-                                                  context, 0.035),
+                                                  context, 0.025),
                                               color: Theme.of(context)
                                                   .buttonTheme
                                                   .colorScheme!
@@ -409,6 +409,9 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                           children: [
                                             Icon(
                                               Icons.paste,
+                                              
+                                              size: heightPerCentage(
+                                                  context, 0.025),
                                               color: Theme.of(context)
                                                   .buttonTheme
                                                   .colorScheme!
@@ -460,6 +463,8 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
                                           children: [
                                             Icon(
                                               Icons.cleaning_services_outlined,
+                                              size: heightPerCentage(
+                                                  context, 0.025),
                                               color: Theme.of(context)
                                                   .buttonTheme
                                                   .colorScheme!
