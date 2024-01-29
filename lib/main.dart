@@ -32,8 +32,10 @@ void main() async {
     // Initialize FFI
     sqfliteFfiInit();
   }
-  databaseFactory = databaseFactoryFfi;
-
+  if (Platform.isAndroid)
+  {
+    databaseFactory = databaseFactoryFfi;
+  }
   runApp(ChangeNotifierProvider(
     create: (context) => ThemeProvider(),
     child: const MyApp(),
@@ -198,9 +200,11 @@ class _MainPageState extends State<MainPage> {
                   ],
                 ),
                 //const VerticalDivider(thickness: 1, width: 2),
+                SizedBox(width: widthPerCentage(context, 0.05),),
                 Expanded(
                   child: screens[index],
-                )
+                ),
+                SizedBox(width: widthPerCentage(context, 0.05),),
               ],
             ),
           );
