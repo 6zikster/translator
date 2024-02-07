@@ -17,7 +17,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' show Platform;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
 
   var prefs = await SharedPreferences.getInstance();
   String prefThemeStr = prefs.getString("theme") ?? "dark";
@@ -31,9 +31,6 @@ void main() async {
   if (Platform.isWindows || Platform.isLinux) {
     // Initialize FFI
     sqfliteFfiInit();
-  }
-  if (Platform.isAndroid)
-  {
     databaseFactory = databaseFactoryFfi;
   }
   runApp(ChangeNotifierProvider(
@@ -200,11 +197,15 @@ class _MainPageState extends State<MainPage> {
                   ],
                 ),
                 //const VerticalDivider(thickness: 1, width: 2),
-                SizedBox(width: widthPerCentage(context, 0.05),),
+                SizedBox(
+                  width: widthPerCentage(context, 0.05),
+                ),
                 Expanded(
                   child: screens[index],
                 ),
-                SizedBox(width: widthPerCentage(context, 0.05),),
+                SizedBox(
+                  width: widthPerCentage(context, 0.05),
+                ),
               ],
             ),
           );
