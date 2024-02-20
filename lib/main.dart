@@ -197,14 +197,8 @@ class _MainPageState extends State<MainPage> {
                   ],
                 ),
                 //const VerticalDivider(thickness: 1, width: 2),
-                SizedBox(
-                  width: widthPerCentage(context, 0.05),
-                ),
                 Expanded(
                   child: screens[index],
-                ),
-                SizedBox(
-                  width: widthPerCentage(context, 0.05),
                 ),
               ],
             ),

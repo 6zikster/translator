@@ -22,6 +22,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
   int selectedOption = 1;
   IconData? bookmarkBtnIcon = Icons.bookmark;
 
+  
   bool isLoading = true;
   bool _isSnackbarActive = false;
 
@@ -32,6 +33,7 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
     //translate(controllerEnterText.text, context);
     //}
     isBookmarked();
+
   }
 
   void _initLanguages() async {
@@ -131,12 +133,16 @@ class _TextFieldsWidgetState extends State<TextFieldsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double widgetSize = width > height ? 0.7 : 0.9;
     return isLoading
         ? Center(
             child: CircularProgressIndicator(),
           )
         : Container(
-            width: widthPerCentage(context, 0.9),
+            width: widthPerCentage(context, widgetSize),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Theme.of(context).colorScheme.primary),
