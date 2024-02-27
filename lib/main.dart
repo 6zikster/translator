@@ -16,6 +16,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'dart:io' show Platform;
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -37,6 +39,14 @@ void main() async {
     create: (context) => ThemeProvider(),
     child: const MyApp(),
   ));
+
+  doWhenWindowReady(() {
+    final initialSize = Size(800, 650);
+    final minSize = Size(400, 450);
+    appWindow.minSize = minSize;
+    appWindow.size = initialSize;
+    appWindow.show();
+  });
 }
 
 class MyApp extends StatelessWidget {
