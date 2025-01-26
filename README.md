@@ -13,9 +13,9 @@ This is a mobile app for translating texts between the following languages: Engl
 5) Languages: Choose between four languages: English, Russian, French, and Spanish.
 
 ## Screenshots
-<img src="readmeImages/Screenshot_Translate.png" alt="Home Page" width="300" />
-<img src="readmeImages/Screenshot_Bookmarks.png" alt="Bookmarks" width="300" />
-<img src="readmeImages/Screenshot_Settings.png" alt="Settings" width="300" />
+<img src="readmeImages/Screenshot_Translate.png" alt="Home Page" width="400" />
+<img src="readmeImages/Screenshot_Bookmarks.png" alt="Bookmarks" width="400" />
+<img src="readmeImages/Screenshot_Settings.png" alt="Settings" width="400" />
 
 ## Video
 You can see how the app works here - [clicl here to open](https://youtube.com/shorts/73lcbp81qis?feature=share)
